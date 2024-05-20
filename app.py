@@ -46,4 +46,16 @@ def get_users():
         query += "AND complexion = %s"
         params.append(complexion)
 
-    if 
+    if body_shape:
+        query += " AND body_shape"
+        params.append(body_shape)
+
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query, params)
+    users = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return jsonify(users)
