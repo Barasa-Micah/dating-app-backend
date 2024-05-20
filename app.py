@@ -59,3 +59,23 @@ def get_users():
     connection.close()
 
     return jsonify(users)
+
+
+@app.route('/connection-request', methods= ['POST'])
+def send_connection_request():
+    data = request.json
+    sender_id = data['sender_id']
+    receiver_id = data['receiver_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        "INSERT INTO connection_requests (sender_id, receiver_id, status) VALUES (%s, %s, %s)",
+        (sender_id, receiver_id, 'pending')
+    )
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return jsonify({'message': 'Connection request sent'}), 201
