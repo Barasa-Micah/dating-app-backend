@@ -93,3 +93,21 @@ def accept_connection_request(request_id):
     connection.close()
 
     return jsonify ({'message': 'Connection request accepted'})
+
+@app.route('/connection-request/<int:request_id>/deny', methods = ['POST'])
+def deby_connection_request(request_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        "DELETE FROM connection_requests WHERE id = %s",
+        (request_id,)
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return jsonify({'message': 'Connection request denied'})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
