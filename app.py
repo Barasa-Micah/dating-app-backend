@@ -19,6 +19,41 @@ def get_db_connection():
     connection = mysql.connector.connect(**db_config)
     return connection
 
+def create_tables():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # Create 'users' table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        county VARCHAR(255) NOT NULL,
+        constituency VARCHAR(255) NOT NULL,
+        residency VARCHAR(255) NOT NULL,
+        height VARCHAR(50) NOT NULL,
+        complexion VARCHAR(50) NOT NULL,
+        body_shape VARCHAR(50) NOT NULL,
+        phone_number VARCHAR(15) NOT NULL
+    )
+    """)
+
+    # Create 'connection_requests' table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS connection_requests (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        sender_id INT NOT NULL,
+        receiver_id INT NOT NULL,
+        status VARCHAR(50) NOT NULL,
+        FOREIGN KEY (sender_id) REFERENCES users(id),
+        FOREIGN KEY (receiver_id) REFERENCES users(id)
+    )
+    """)
+
+    cursor.close()
+    connection.close()
+
+create_tables()
 
 @app.route('/users', methods=['GET'])
 def get_users():
