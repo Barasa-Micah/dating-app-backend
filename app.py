@@ -79,3 +79,17 @@ def send_connection_request():
     connection.close()
 
     return jsonify({'message': 'Connection request sent'}), 201
+
+@app.route('/connection-request/<int:request_id>/accept', methods=['POST'])
+def accept_connection_request(request_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE connection_requests SET statuss = %s WHERE id = %s",
+        ('accepted,request_id')
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return jsonify ({'message': 'Connection request accepted'})
