@@ -44,7 +44,7 @@ def get_users():
         query += "AND beards %s"
         filters.append(beards == 'true')
 
-         cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor()
     cursor.execute(query, tuple(filters))
     results = cursor.fetchall()
     cursor.close()
